@@ -1,5 +1,16 @@
 const XLSX = require('xlsx');
 
+function formatIOSDate(date) {
+  return date.replace(/\//g, '-').split('-').reduce((prev, cur, index) => {
+    if (index > 0) {
+      prev += '-' + (cur.length === 1 ? `0${cur}` : cur)
+    } else {
+      prev += cur
+    }
+    return prev
+  }, '')
+}
+
 module.exports = function readFrontendExcelTasks(path) {
   // 读取 Excel 文件
   const workbook = XLSX.readFile(path || '/Users/xiaokyo/Downloads/前端任务表.xlsx');
@@ -16,10 +27,10 @@ module.exports = function readFrontendExcelTasks(path) {
 
     return {
       name,
-      startDate,
-      endDate,
+      startDate: formatIOSDate(startDate),
+      endDate: formatIOSDate(endDate),
       level,
-      jiraUrl,
+      jiraUrl: jiraUrl || 'empty',
       remark
     }
   });

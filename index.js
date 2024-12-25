@@ -9,7 +9,7 @@ const notion = new Client({
 })
 
 const mineTasks = readFrontendExcelTasks()
-
+console.log('%cindex.js:12 mineTasks', 'color: #007acc;', mineTasks);
 async function updateCJTask({ page_id, jiraUrl, startDate, endDate }) {
   const res = await notion.pages.update({
     page_id,
@@ -43,13 +43,12 @@ async function createCJTask({
     filter: {
       property: 'Name',
       title: {
-        contains: title,
+        equals: title,
       },
     }
   })
   const list = findRes.results
-  console.log('%cindex.js:51 list.length', 'color: #007acc;', list);
-  if (list.length >= 0) {
+  if (list.length > 0) {
     await updateCJTask({
       page_id: list[0].id,
       jiraUrl,
@@ -58,7 +57,6 @@ async function createCJTask({
     })
     return
   }
-
   const res = await notion.pages.create({
     parent: {
       database_id: process.env.NOTION_DATABASE_ID
@@ -86,7 +84,7 @@ async function createCJTask({
       }
     }
   })
-
+console.log('%cindex.js:87 res', 'color: #007acc;', res);
   if (res?.id) {
     console.log(`createCJTask ${title} success`)
   } else {
@@ -96,7 +94,7 @@ async function createCJTask({
 
 for (const task of mineTasks) {
   createCJTask({
-    title: task.title,
+    title: task.name,
     jiraUrl: task.jiraUrl,
     startDate: task.startDate,
     endDate: task.endDate
