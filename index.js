@@ -92,11 +92,15 @@ console.log('%cindex.js:87 res', 'color: #007acc;', res);
   }
 }
 
-for (const task of mineTasks) {
-  createCJTask({
-    title: task.name,
-    jiraUrl: task.jiraUrl,
-    startDate: task.startDate,
-    endDate: task.endDate
-  })
+async function run() {
+  for (const task of mineTasks) {
+    await createCJTask({
+      title: task.name,
+      jiraUrl: task.jiraUrl,
+      startDate: task.startDate,
+      endDate: task.endDate
+    })
+  }
 }
+
+run()
